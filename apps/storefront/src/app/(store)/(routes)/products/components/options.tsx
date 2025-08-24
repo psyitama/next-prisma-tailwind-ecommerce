@@ -205,48 +205,50 @@ export function BrandCombobox({ brands, initialBrand }) {
          <PopoverContent className="w-full p-0">
             <Command>
                <CommandInput placeholder="Search brand..." />
-               <CommandEmpty>No brand found.</CommandEmpty>
-               <CommandGroup>
-                  {brands.map((brand) => (
-                     <CommandItem
-                        key={brand.title}
-                        onSelect={(currentValue) => {
-                           const current = new URLSearchParams(
-                              Array.from(searchParams.entries())
-                           )
+               <CommandList>
+                  <CommandEmpty>No brand found.</CommandEmpty>
+                  <CommandGroup>
+                     {brands.map((brand) => (
+                        <CommandItem
+                           key={brand.title}
+                           onSelect={(currentValue) => {
+                              const current = new URLSearchParams(
+                                 Array.from(searchParams.entries())
+                              )
 
-                           if (currentValue === value) {
-                              current.delete('brand')
-                              setValue('')
-                           } else {
-                              current.set('brand', currentValue)
-                              setValue(currentValue)
-                           }
+                              if (currentValue === value) {
+                                 current.delete('brand')
+                                 setValue('')
+                              } else {
+                                 current.set('brand', currentValue)
+                                 setValue(currentValue)
+                              }
 
-                           // cast to string
-                           const search = current.toString()
-                           // or const query = `${'?'.repeat(search.length && 1)}${search}`;
-                           const query = search ? `?${search}` : ''
+                              // cast to string
+                              const search = current.toString()
+                              // or const query = `${'?'.repeat(search.length && 1)}${search}`;
+                              const query = search ? `?${search}` : ''
 
-                           router.replace(`${pathname}${query}`, {
-                              scroll: false,
-                           })
+                              router.replace(`${pathname}${query}`, {
+                                 scroll: false,
+                              })
 
-                           setOpen(false)
-                        }}
-                     >
-                        <Check
-                           className={cn(
-                              'mr-2 h-4',
-                              value === brand.title
-                                 ? 'opacity-100'
-                                 : 'opacity-0'
-                           )}
-                        />
-                        {brand.title}
-                     </CommandItem>
-                  ))}
-               </CommandGroup>
+                              setOpen(false)
+                           }}
+                        >
+                           <Check
+                              className={cn(
+                                 'mr-2 h-4',
+                                 value === brand.title
+                                    ? 'opacity-100'
+                                    : 'opacity-0'
+                              )}
+                           />
+                           {brand.title}
+                        </CommandItem>
+                     ))}
+                  </CommandGroup>
+               </CommandList>
             </Command>
          </PopoverContent>
       </Popover>
