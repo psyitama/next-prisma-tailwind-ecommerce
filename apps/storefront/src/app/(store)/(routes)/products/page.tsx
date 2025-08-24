@@ -8,11 +8,12 @@ import {
    AvailableToggle,
    BrandCombobox,
    CategoriesCombobox,
+   SearchProductInput,
    SortBy,
 } from './components/options'
 
 export default async function Products({ searchParams }) {
-   const { sort, isAvailable, brand, category, page = 1 } = searchParams ?? null
+   const { search, sort, isAvailable, brand, category, page = 1 } = searchParams ?? null
 
    const orderBy = getOrderBy(sort)
 
@@ -21,6 +22,10 @@ export default async function Products({ searchParams }) {
    const products = await prisma.product.findMany({
       where: {
          isAvailable: isAvailable == 'true' || sort ? true : undefined,
+         title: {
+            contains: search,
+            mode: 'insensitive',
+         },
          brand: {
             title: {
                contains: brand,
@@ -52,6 +57,7 @@ export default async function Products({ searchParams }) {
             description="Below is a list of products you have in your cart."
          />
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-4">
+            <SearchProductInput initialSearchQuery={search} />
             <SortBy initialData={sort} />
             <CategoriesCombobox
                initialCategory={category}

@@ -8,6 +8,7 @@ import {
    CommandInput,
    CommandItem,
 } from '@/components/ui/command'
+import { Input } from "@/components/ui/input"
 import { Label } from '@/components/ui/label'
 import {
    Popover,
@@ -280,5 +281,62 @@ export function AvailableToggle({ initialData }) {
             <Label htmlFor="available">Only Available</Label>
          </div>
       </div>
+   )
+}
+
+interface SearchProps {
+   readonly initialSearchQuery: string
+}
+
+export function SearchProductInput({ initialSearchQuery }: SearchProps) {
+   const router = useRouter()
+   const pathname = usePathname()
+   const searchParams = useSearchParams()
+
+   const [value, setValue] = React.useState('')
+   const [debouncedValue, setDebouncedValue] = React.useState('')
+
+   useEffect(() => {
+      if (isVariableValid(initialSearchQuery)) {
+         setValue(initialSearchQuery)
+      }
+   }, [initialSearchQuery])
+
+   // Add delay while user search to avoid api request immediately
+   useEffect(() => {
+      const timeout = setTimeout(() => {
+         setDebouncedValue(value)
+      }, 500)
+
+      return () => clearTimeout(timeout);
+   }, [value])
+
+   useEffect(() => {
+      const current = new URLSearchParams(Array.from(searchParams.entries()))
+
+      if (debouncedValue) {
+         current.set('search', debouncedValue)
+      } else {
+         current.delete('search')
+      }
+
+      // Only update the URL if it actually changed from the current one.
+      const newQuery = current.toString();
+      const newUrl = `${pathname}${newQuery ? `?${newQuery}` : ""}`;
+
+      if (newUrl !== `${pathname}?${searchParams.toString()}`) {
+         router.replace(newUrl, { scroll: false });
+      }
+
+   }, [debouncedValue])
+
+   return (
+      <Input
+         type="text"
+         placeholder="Search products..."
+         value={value}
+         onChange={(e) => setValue(e.target.value)}
+         className="w-full focus-visible:ring-0"
+      />
    )
 }
