@@ -367,8 +367,8 @@ export function PriceInputFields({ initialMinPrice, initialMaxPrice }: PriceValu
    const pathname = usePathname()
    const searchParams = useSearchParams()
 
-   const [minPrice, setMinPrice] = React.useState(0)
-   const [maxPrice, setMaxPrice] = React.useState(500)
+   const [minPrice, setMinPrice] = React.useState(undefined)
+   const [maxPrice, setMaxPrice] = React.useState(undefined)
 
    useEffect(() => {
       if (!isNaN(initialMinPrice)) setMinPrice(initialMinPrice)
@@ -396,6 +396,7 @@ export function PriceInputFields({ initialMinPrice, initialMaxPrice }: PriceValu
             placeholder="Min Price"
             value={minPrice}
             onChange={(e) => setMinPrice(parseFloat(e.target.value))}
+            className="w-full focus-visible"
          />
 
          <Input
@@ -403,6 +404,7 @@ export function PriceInputFields({ initialMinPrice, initialMaxPrice }: PriceValu
             placeholder="Max Price"
             value={maxPrice}
             onChange={(e) => setMaxPrice(parseFloat(e.target.value))}
+            className="w-full focus-visible"
          />
 
          <Button 
@@ -410,7 +412,7 @@ export function PriceInputFields({ initialMinPrice, initialMaxPrice }: PriceValu
             onClick={handleApply} 
             className="whitespace-nowrap"
          >
-            Filter Price
+            Apply
          </Button>
       </div>
    )
