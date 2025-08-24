@@ -70,9 +70,11 @@ export function SortBy({ initialData }) {
             <SelectValue placeholder="Sort By" />
          </SelectTrigger>
          <SelectContent>
-            <SelectItem value="featured">Featured</SelectItem>
+            {/* <SelectItem value="featured">Featured</SelectItem> */}
             <SelectItem value="most_expensive">Most Expensive</SelectItem>
             <SelectItem value="least_expensive">Least Expensive</SelectItem>
+            <SelectItem value="title_asc">Title (A-Z)</SelectItem>
+            <SelectItem value="title_desc">Title (Z-A)</SelectItem>
          </SelectContent>
       </Select>
    )

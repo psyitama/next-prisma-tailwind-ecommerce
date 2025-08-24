@@ -15,7 +15,6 @@ import {
 
 export default async function Products({ searchParams }) {
    const { search, minPrice, maxPrice, sort, isAvailable, brand, category, page = 1 } = searchParams ?? null
-
    const orderBy = getOrderBy(sort)
    const priceMin = parseFloat(minPrice);
    const priceMax = parseFloat(maxPrice);
@@ -28,12 +27,13 @@ export default async function Products({ searchParams }) {
          .map((cat) => cat.trim())
       : 
       undefined
+   const isTitleSort = sort === "title_asc" || sort === "title_desc"
 
    const brands = await prisma.brand.findMany()
    const categories = await prisma.category.findMany()
    const products = await prisma.product.findMany({
       where: {
-         isAvailable: isAvailable == 'true' || sort ? true : undefined,
+         isAvailable: (isAvailable == 'true' || sort) && !isTitleSort ? true : undefined,
          title: {
             contains: search,
             mode: 'insensitive',
@@ -109,6 +109,16 @@ function getOrderBy(sort) {
       case 'least_expensive':
          orderBy = {
             price: 'asc',
+         }
+         break
+      case 'title_asc':
+         orderBy = {
+            title: 'asc',
+         }
+         break
+      case 'title_desc':
+         orderBy = {
+            title: 'desc',
          }
          break
 
