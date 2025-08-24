@@ -288,7 +288,7 @@ interface SearchProps {
    readonly initialSearchQuery: string
 }
 
-export function SearchProductInput({ initialSearchQuery }: SearchProps) {
+export function ProductSearchInput({ initialSearchQuery }: SearchProps) {
    const router = useRouter()
    const pathname = usePathname()
    const searchParams = useSearchParams()
@@ -338,5 +338,60 @@ export function SearchProductInput({ initialSearchQuery }: SearchProps) {
          onChange={(e) => setValue(e.target.value)}
          className="w-full focus-visible:ring-0"
       />
+   )
+}
+
+interface PriceValueProps {
+   readonly initialMinPrice: number;
+   readonly initialMaxPrice: number;
+}
+
+export function PriceInputFields({ initialMinPrice, initialMaxPrice }: PriceValueProps ) {
+   const router = useRouter()
+   const pathname = usePathname()
+   const searchParams = useSearchParams()
+
+   const [minPrice, setMinPrice] = React.useState(0)
+   const [maxPrice, setMaxPrice] = React.useState(500)
+
+   useEffect(() => {
+      if (!isNaN(initialMinPrice)) setMinPrice(initialMinPrice)
+      if (!isNaN(initialMaxPrice)) setMaxPrice(initialMaxPrice)
+    }, [initialMinPrice, initialMaxPrice])
+
+   const handleApply = () => {
+      const current = new URLSearchParams(Array.from(searchParams.entries()))
+
+      current.set('minPrice', minPrice.toString())
+      current.set('maxPrice', maxPrice.toString())
+
+      const search = current.toString()
+      const query = search ? `?${search}` : ''
+
+      router.replace(`${pathname}${query}`, {
+         scroll: false,
+      })
+   }
+
+   return (
+      <div className="flex items-center gap-2">
+         <Input
+            type="number"
+            placeholder="Min Price"
+            value={minPrice}
+            onChange={(e) => setMinPrice(parseFloat(e.target.value))}
+            className="w-24 focus-visible:ring-0"
+         />
+
+         <Input
+            type="number"
+            placeholder="Max Price"
+            value={maxPrice}
+            onChange={(e) => setMaxPrice(parseFloat(e.target.value))}
+            className="w-24 focus-visible:ring-0"
+         />
+
+         <Button variant='outline' onClick={handleApply}>Apply</Button>
+      </div>
    )
 }

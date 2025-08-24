@@ -8,14 +8,20 @@ import {
    AvailableToggle,
    BrandCombobox,
    CategoriesCombobox,
-   SearchProductInput,
+   ProductSearchInput,
+   PriceInputFields,
    SortBy,
 } from './components/options'
 
 export default async function Products({ searchParams }) {
-   const { search, sort, isAvailable, brand, category, page = 1 } = searchParams ?? null
+   const { search, minPrice, maxPrice, sort, isAvailable, brand, category, page = 1 } = searchParams ?? null
 
    const orderBy = getOrderBy(sort)
+   const priceMin = parseFloat(minPrice);
+   const priceMax = parseFloat(maxPrice);
+   const priceFilter = !isNaN(priceMin) && !isNaN(priceMax) 
+   ? { price: { gte: priceMin, lte: priceMax } } 
+   : {};
 
    const brands = await prisma.brand.findMany()
    const categories = await prisma.category.findMany()
@@ -40,6 +46,7 @@ export default async function Products({ searchParams }) {
                },
             },
          },
+         ...priceFilter
       },
       orderBy,
       skip: (page - 1) * 12,
@@ -57,7 +64,8 @@ export default async function Products({ searchParams }) {
             description="Below is a list of products you have in your cart."
          />
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-4">
-            <SearchProductInput initialSearchQuery={search} />
+            <ProductSearchInput initialSearchQuery={search} />
+            <PriceInputFields initialMinPrice={priceMin} initialMaxPrice={priceMax} />
             <SortBy initialData={sort} />
             <CategoriesCombobox
                initialCategory={category}
