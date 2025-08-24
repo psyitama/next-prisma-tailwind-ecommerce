@@ -72,13 +72,13 @@ export default async function Products({ searchParams }) {
          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-4">
             <ProductSearchInput initialSearchQuery={search} />
             <PriceInputFields initialMinPrice={priceMin} initialMaxPrice={priceMax} />
-            <SortBy initialData={sort} />
             <CategoriesCombobox
                initialCategory={category}
                categories={categories}
             />
             <BrandCombobox initialBrand={brand} brands={brands} />
-            <AvailableToggle initialData={isAvailable} />
+            <SortBy initialData={sort} />
+            {/* <AvailableToggle initialData={isAvailable} /> */}
          </div>
          <Separator />
          {isVariableValid(products) ? (
