@@ -390,13 +390,12 @@ export function PriceInputFields({ initialMinPrice, initialMaxPrice }: PriceValu
    }
 
    return (
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 w-full">
          <Input
             type="number"
             placeholder="Min Price"
             value={minPrice}
             onChange={(e) => setMinPrice(parseFloat(e.target.value))}
-            className="w-24 focus-visible:ring-0"
          />
 
          <Input
@@ -404,10 +403,15 @@ export function PriceInputFields({ initialMinPrice, initialMaxPrice }: PriceValu
             placeholder="Max Price"
             value={maxPrice}
             onChange={(e) => setMaxPrice(parseFloat(e.target.value))}
-            className="w-24 focus-visible:ring-0"
          />
 
-         <Button variant='outline' onClick={handleApply}>Apply</Button>
+         <Button 
+            variant="outline" 
+            onClick={handleApply} 
+            className="whitespace-nowrap"
+         >
+            Filter Price
+         </Button>
       </div>
    )
 }
