@@ -69,7 +69,7 @@ export default async function Products({ searchParams }) {
             title="Products"
             description="Below is a list of products you have in your cart."
          />
-         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mb-4">
+         <div className="grid grid-cols-1 gap-2 mb-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
             <ProductSearchInput initialSearchQuery={search} />
             <PriceInputFields initialMinPrice={priceMin} initialMaxPrice={priceMax} />
             <CategoriesCombobox
