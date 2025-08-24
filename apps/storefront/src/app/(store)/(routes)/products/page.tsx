@@ -22,6 +22,12 @@ export default async function Products({ searchParams }) {
    const priceFilter = !isNaN(priceMin) && !isNaN(priceMax) 
    ? { price: { gte: priceMin, lte: priceMax } } 
    : {};
+   const filteredCategories = category ? 
+      category
+         .split(',')
+         .map((cat) => cat.trim())
+      : 
+      undefined
 
    const brands = await prisma.brand.findMany()
    const categories = await prisma.category.findMany()
@@ -41,7 +47,7 @@ export default async function Products({ searchParams }) {
          categories: {
             some: {
                title: {
-                  contains: category,
+                  in: filteredCategories,
                   mode: 'insensitive',
                },
             },
