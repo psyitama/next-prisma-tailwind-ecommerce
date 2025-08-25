@@ -14,6 +14,13 @@ import { ProductColumn, ProductsTable } from './components/table'
 export default async function ReportsPage({ searchParams }) {
    const { startDate, endDate, brand, category, page = 1 } = searchParams ?? null
 
+   const filteredCategories = category ? 
+        category
+            .split(',')
+            .map((cat) => cat.trim())
+        : 
+        undefined
+
     const brands = await prisma.brand.findMany()
     const categories = await prisma.category.findMany()
 
@@ -35,6 +42,14 @@ export default async function ReportsPage({ searchParams }) {
                         title: {
                             contains: brand,
                             mode: 'insensitive'
+                        }
+                    },
+                    categories: {
+                        some: {
+                            title: {
+                                in: filteredCategories,
+                                mode: 'insensitive'
+                            }
                         }
                     }
                 }
@@ -98,6 +113,14 @@ export default async function ReportsPage({ searchParams }) {
                 title: {
                     contains: brand,
                     mode: 'insensitive'
+                }
+            },
+            categories: {
+                some: {
+                    title: {
+                        in: filteredCategories,
+                        mode: 'insensitive'
+                    }
                 }
             }
         },
