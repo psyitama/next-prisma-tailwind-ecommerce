@@ -27,7 +27,19 @@ export default async function ReportsPage({ searchParams }) {
             createdAt: {
                 gte: startDate,
                 lte: endDate,
+            },
+        orderItems: {
+            some: {
+                product: {
+                    brand: {
+                        title: {
+                            contains: brand,
+                            mode: 'insensitive'
+                        }
+                    }
+                }
             }
+        }
         },
     });
 
@@ -80,6 +92,12 @@ export default async function ReportsPage({ searchParams }) {
                             lte: endDate,
                         }
                     }
+                }
+            },
+            brand: {
+                title: {
+                    contains: brand,
+                    mode: 'insensitive'
                 }
             }
         },
