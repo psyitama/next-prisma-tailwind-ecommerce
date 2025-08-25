@@ -7,7 +7,6 @@ interface OrderReportProps {
 }
 
 export const OrderReportChart: React.FC<OrderReportProps> = ({ data }) => {
-    console.log('OrderReportChart', data)
    return (
     <ResponsiveContainer width="100%" height={350}>
         <LineChart data={data}>
