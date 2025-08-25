@@ -17,7 +17,7 @@ export default async function ReportsPage({ searchParams }) {
     const brands = await prisma.brand.findMany()
     const categories = await prisma.category.findMany()
 
-    // Charts data
+    // CHART DATA: Order total grouped by date.
     const orders = await prisma.order.groupBy({
         by: ['createdAt'],
         _count: {
@@ -39,13 +39,13 @@ export default async function ReportsPage({ searchParams }) {
         groupedOrders[date] = (groupedOrders[date] || 0) + order._count.id;
     });
 
-    // Format for chart
+    // Format the data for chart.
     const ordersChartData = Object.entries(groupedOrders)
     .map(([date, orderCount]) => ({ date, orderCount }))
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
 
-    // TABLE DATA: Top Selling Products
+    // TABLE DATA: Top Selling Products.
     const products = await prisma.product.findMany({
         select: {
             id: true,
@@ -71,16 +71,34 @@ export default async function ReportsPage({ searchParams }) {
                 },
             },
         },
+        where: {
+            orders: {
+                some: {
+                    order: {
+                        createdAt: {
+                            gte: startDate,
+                            lte: endDate,
+                        }
+                    }
+                }
+            }
+        },
+        orderBy: {
+            orders: {
+                _count: 'desc',
+            }
+        }
     })
 
+    // Format the data for table.
     const topSellingProducts: ProductColumn[] = products.map((product) => ({
-    id: product.id,
-    title: product.title,
-    price: formatter.format(product.price),
-    discount: formatter.format(product.discount),
-    category: product.categories[0].title,
-    sales: product.orders.length,
-    isAvailable: product.isAvailable,
+        id: product.id,
+        title: product.title,
+        price: formatter.format(product.price),
+        discount: formatter.format(product.discount),
+        category: product.categories[0].title,
+        sales: product.orders.length,
+        isAvailable: product.isAvailable,
     }))
 
    return (
